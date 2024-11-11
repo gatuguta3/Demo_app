@@ -109,7 +109,7 @@ class _HomeState extends State<Home> {
               ),
               SizedBox(width: 10,),
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Good morning, ',
                   style: TextStyle(fontSize: 16, color: Colors.white),
