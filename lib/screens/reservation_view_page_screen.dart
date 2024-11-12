@@ -176,7 +176,7 @@ class _ReservationViewPageState extends State<ReservationViewPage> {
                             const Row(children: [
                               Text('Payment',style: TextStyle(fontSize: 14 , fontWeight: FontWeight.w400)), 
                             ],),
- SizedBox(
+               SizedBox(
                     width: 340,
                     child: Card(
                     shape: RoundedRectangleBorder(

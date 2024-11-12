@@ -1,4 +1,6 @@
+import 'package:demo_app/models/experiences_model.dart';
 import 'package:demo_app/screens/experience_view_screen.dart';
+import 'package:demo_app/services/experiences_demodata_service.dart';
 import 'package:demo_app/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +14,8 @@ class Discover extends StatefulWidget {
 }
 
 class _DiscoverState extends State<Discover> {
+  final ExperiencesService experiencesService = ExperiencesService();
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -58,23 +62,29 @@ class _DiscoverState extends State<Discover> {
             Center(child: Text('Content for Tab 1')),
             Center(child: Text('Content for Tab 2')),
             Center(child: Text('Content for Tab 3')),
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                 const SizedBox(height: 10,),
-                 const  Row(
-                    children: [
-                      SizedBox(width: 5,),
-                       Text('Explore the best offers available !'),
-                    ],
-                  ),
+            
+           FutureBuilder<List<Experiences>>(
+                  future: experiencesService.fetchExperiences(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(child: Text('No experiences found.'));
+                    }
 
-                 Container(
+                    final experiences = snapshot.data!;
+
+                    return ListView.builder(
+            itemCount: experiences.length,
+            itemBuilder: (context, index) {
+              final experience = experiences[index];
+              return Container(
                     padding: const EdgeInsets.all(8),
                     child: SizedBox(
                       width: 320,
-                      height: 210,
+                      height: 220,
                       child: Card(
                         color: Colors.white,
                         child: Column(
@@ -95,7 +105,7 @@ class _DiscoverState extends State<Discover> {
                                   children: <Widget>[
                                     Positioned.fill(
                                       child: Image.asset(
-                                        'images/beachview.jpeg',
+                                        experience.image_url,
                                         fit: BoxFit.cover, // Use BoxFit.cover to fill the container
                                       ),
                                     ),
@@ -104,18 +114,28 @@ class _DiscoverState extends State<Discover> {
                               ),
                             ),
                             const SizedBox(height: 5),
-                            const Row(
+                             Row(
                               children: [
                                 SizedBox(width: 5),
-                                Text('DIANI NEPTUNE BEACH RESORT'),
+                                Text(experience.title),
                               ],
                             ),
                             const SizedBox(height: 5),
-                            const Row(
+                             Row(
                               children: [
                                 SizedBox(width: 5),
                                 Text(
-                                  'Beautiful beach experience at the beautiful \nNeptune Beach Resort in Diani',
+                                  experience.description,
+                                  style: TextStyle(fontSize: 11, color: Color.fromARGB(125, 0, 0, 0)),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 5),
+                             Row(
+                              children: [
+                                SizedBox(width: 5),
+                                Text(
+                                  experience.location,
                                   style: TextStyle(fontSize: 11, color: Color.fromARGB(125, 0, 0, 0)),
                                 ),
                               ],
@@ -124,98 +144,12 @@ class _DiscoverState extends State<Discover> {
                         ),
                       ),
                     ),
-                  ),
+                  );
                 
-                Container(
-                    padding: const EdgeInsets.all(8),
-                    child: SizedBox(
-                      width: 320,
-                      height: 210,
-                      child: Card(
-                        color: Colors.white,
-                        child: Column(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                height: 140.0,
-                                child: Stack(
-                                  children: <Widget>[
-                                    Positioned.fill(
-                                      child: Image.asset(
-                                        'images/man.jpeg',
-                                        fit: BoxFit.cover, // Use BoxFit.cover to fill the container
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const Row(children: [
-                              SizedBox(width: 5),
-                              Text('Machakos Colourfest'),
-                            ]),
-                            const SizedBox(height: 5),
-                            const Row(children: [
-                              SizedBox(width: 5),
-                              Text(
-                                'Get ready for a burst of color at the Machakos \ncolorfest this August',
-                                style: TextStyle(fontSize: 12, color: Color.fromARGB(125, 0, 0, 0)),
-                              ),
-                            ]),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
 
-                      Container(
-                    padding: const EdgeInsets.all(8),
-                    child: SizedBox(
-                      width: 320,
-                      height: 210,
-                      child: Card(
-                        color: Colors.white,
-                        child: Column(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                height: 140.0,
-                                child: Stack(
-                                  children: <Widget>[
-                                    Positioned.fill(
-                                      child: Image.asset(
-                                        'images/man.jpeg',
-                                        fit: BoxFit.cover, // Use BoxFit.cover to fill the container
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const Row(children: [
-                              SizedBox(width: 5),
-                              Text('Machakos Colourfest'),
-                            ]),
-                            const SizedBox(height: 5),
-                            const Row(children: [
-                              SizedBox(width: 5),
-                              Text(
-                                'Get ready for a burst of color at the Machakos \ncolorfest this August',
-                                style: TextStyle(fontSize: 12, color: Color.fromARGB(125, 0, 0, 0)),
-                              ),
-                            ]),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                   }); }),
 
-
-                ],
-              ),
-            )
+            
           ],
         ),
 

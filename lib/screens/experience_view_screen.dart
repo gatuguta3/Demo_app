@@ -1,4 +1,6 @@
+import 'package:demo_app/models/packages_model.dart';
 import 'package:demo_app/screens/reservation_page_screen.dart';
+import 'package:demo_app/services/packages_demodata_service.dart';
 import 'package:demo_app/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +14,9 @@ class ExperienceView extends StatefulWidget {
 }
 
 class _ExperienceViewState extends State<ExperienceView> {
+
+final PackagesService packagesServices = PackagesService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,6 +107,25 @@ class _ExperienceViewState extends State<ExperienceView> {
                  ],),
 
 
+
+ FutureBuilder<List<Packages>>(
+        future: packagesServices.fetchPackages(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No packages found.'));
+          }
+
+          final packages = snapshot.data!;
+
+          return SingleChildScrollView( 
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: packages.map((package) {
+                return 
                   SizedBox(
                     width: 340,
                     child: Card(
@@ -116,32 +140,36 @@ class _ExperienceViewState extends State<ExperienceView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Standard',style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold)),
+                          Text(package.type,style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold)),
                           Row(
                             children: [
-                             const  CircleAvatar(),
+                             const  Icon(size:40 ,color:Color.fromARGB(95, 6, 8, 9),Icons.money),
                              const SizedBox(width: 3,),
-                             Text('KES 4,500/Person',style: TextStyle(fontSize: 18 , fontWeight: FontWeight.w400)),
+                             Text('KES ${package.price_per_person}/Person',style: TextStyle(fontSize: 18 , fontWeight: FontWeight.w400)),
                           ],
                           ),
                           SizedBox(height: 5,),
 
                           Row(
                             children: [
-                             const  CircleAvatar(),
+                             const  Icon(size:40 ,color:Color.fromARGB(95, 6, 8, 9),Icons.people),
                              const SizedBox(width: 3,),
-                             Text('Up to 16 people',style: TextStyle(fontSize: 18 , fontWeight: FontWeight.w400)),
+                             Text('Up to ${package.max_people} people',style: TextStyle(fontSize: 18 , fontWeight: FontWeight.w400)),
                           ],
                           ),
                           SizedBox(height: 5,),
 
-                          Row(
+                          
+                            Row(
                             children: [
-                             const  CircleAvatar(),
+                              package.status == 'Active'
+                              ? Icon(size:40 ,color:  Color.fromARGB(255, 1, 110, 16),Icons.check_circle_outline)
+                              : Icon(size:40 ,color: Colors.red,Icons.cancel_outlined),                               
                              const SizedBox(width: 3,),
-                             Text('Active',style: TextStyle(fontSize: 18 , fontWeight: FontWeight.w400)),
+                             Text(package.status,style: TextStyle(fontSize: 18 , fontWeight: FontWeight.w400)),
                           ],
-                          ),           
+                          ), 
+                                 
                           SizedBox(height: 5,),
                            Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -171,9 +199,23 @@ class _ExperienceViewState extends State<ExperienceView> {
                       ),
                     ),
                   ),
-                  ),
+                  );
 
-   
+ 
+                
+                }).toList(),
+            ),
+          );
+        },
+      ),
+
+
+
+
+
+
+
+  
 
               ],
             ),),
