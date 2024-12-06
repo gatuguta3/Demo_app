@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, unused_import, unnecessary_import
+
 import 'package:demo_app/models/experiences_model.dart';
 import 'package:demo_app/screens/experience_view_screen.dart';
 import 'package:demo_app/services/experiences_demodata_service.dart';
@@ -84,7 +86,7 @@ class _DiscoverState extends State<Discover> {
                     padding: const EdgeInsets.all(8),
                     child: SizedBox(
                       width: 320,
-                      height: 220,
+                      
                       child: Card(
                         color: Colors.white,
                         child: Column(
@@ -121,6 +123,42 @@ class _DiscoverState extends State<Discover> {
                               ],
                             ),
                             const SizedBox(height: 5),
+                            const Divider(thickness: 1,),
+                            
+                             Row(
+                              mainAxisAlignment:  MainAxisAlignment.spaceEvenly,
+                              
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                SizedBox(width: 5),
+                                Column(children: [
+                                  Text('Subtitle'),
+                                  Text(
+                                  experience.subtitle,
+                                   softWrap: true, // Ensures the text wraps when needed
+                                    maxLines: null, // Allows unlimited lines (or set a specific number)
+                                    overflow: TextOverflow.visible,
+                                  style: TextStyle(fontSize: 11, color: Color.fromARGB(125, 0, 0, 0)),
+                                ),
+
+                                ],),
+                                Column(children: [
+                                  Text('Venue'),
+                                  Text(
+                                  experience.location,
+                                  softWrap: true, // Ensures the text wraps when needed
+                                    maxLines: null, // Allows unlimited lines (or set a specific number)
+                                    overflow: TextOverflow.visible,
+                                  style: TextStyle(fontSize: 11, color: Color.fromARGB(125, 0, 0, 0)),
+                                ),
+
+                                ],),
+                                
+                              ],
+                            ),
+                            const SizedBox(height: 5),
+                            const Divider(thickness: 1,),
                              Row(
                               children: [
                                 SizedBox(width: 5),
@@ -130,16 +168,7 @@ class _DiscoverState extends State<Discover> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 5),
-                             Row(
-                              children: [
-                                SizedBox(width: 5),
-                                Text(
-                                  experience.location,
-                                  style: TextStyle(fontSize: 11, color: Color.fromARGB(125, 0, 0, 0)),
-                                ),
-                              ],
-                            ),
+                            
                           ],
                         ),
                       ),

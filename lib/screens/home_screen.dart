@@ -96,13 +96,8 @@ class _HomeState extends State<Home> {
           SizedBox(width: 3),
           GestureDetector(
             onTap: () {              
-              Clipboard.setData(ClipboardData(text: '$WalletId')).then((_) {
-               
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Copied to clipboard!'),
-                  ),
-                );
+              Clipboard.setData(ClipboardData(text: '$WalletId')).then((_) {              
+              
               });
             },
             child: Icon(
